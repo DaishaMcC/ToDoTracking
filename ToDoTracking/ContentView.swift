@@ -9,9 +9,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var taskGroups = TaskGroup.sampleData //brings in fake information we created taskfile
-    @State private var selectedGroup: TaskGroup?
-    @State private var columnVisibility: NavigationSplitViewVisibility = .all
+    @State private var taskGroups : [TaskGroup] = [] // no longer calling fake data yay
+    @State private var selectedGroup: TaskGroup? // selected group
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all // side panel navigation
+    @State private var isShowingAddGroup = false
+    @Environment(\.scenePhase) private var scenePhase
+    let saveKey = "taskGroupData"
     
     var body: some View {
         // column 1: left
@@ -25,6 +28,13 @@ struct ContentView: View {
             }
             .navigationTitle("ToDo Application")
             .listStyle(.sidebar)
+            .toolbar {
+                Button {
+                    isShowingAddGroup = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
         } detail: {
             
             //Show the selected group found by the index and display it on the detailview
@@ -36,6 +46,44 @@ struct ContentView: View {
                 ContentUnavailableView("Select a Group", systemImage: "sidebar.left")
             }
         }
+        .sheet(isPresented: $isShowingAddGroup) {
+            NewGroupView { NewGroup in
+                taskGroups.append(NewGroup)
+                selectedGroup = NewGroup // automatically show details of thhe new group I created
+            }
+        }
+        .onAppear{
+            loadData()
+        }
+        .onChange(of: scenePhase) {oldValue, newValue in
+            if newValue == .active {
+                print("App Is Active")
+            } else if newValue == .inactive {
+                print("App is InActive")
+            } else if newValue == .background {
+                print("Data Is Being Saved")
+                saveData()
+            }
+        }
+        
+    }
+    
+    // Data Persistance (save data)
+    func saveData() {
+        if let encodedData = try? JSONEncoder().encode(taskGroups) {
+            //save it in userDefaults
+            UserDefaults.standard.set(encodedData, forKey: saveKey)
+        }
+    }
+    
+    func loadData() {
+        if let savedData = UserDefaults.standard.data(forKey: saveKey) {
+            if let decodedGroups = try? JSONDecoder().decode([TaskGroup].self,  from: savedData) {
+                taskGroups = decodedGroups
+                return
+            }
+        }
+        taskGroups = TaskGroup.sampleData // if no data was found to load
     }
 }
 
