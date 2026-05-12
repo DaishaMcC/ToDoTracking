@@ -7,11 +7,18 @@
 
 import Testing
 @testable import ToDoTracking
+import Foundation
 
 struct ToDoTrackingTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test("Verify that the TaskItem can store and retreieve a due date")
+    
+    func testTaskItemDueDate(){
+        
+        let testDate = Date(timeIntervalSince1970: 1735689600)
+        let task = TaskItem(title: "Create Test due Date", dueDate: testDate)
+        
+        #expect(task.dueDate == testDate)
     }
 
 }

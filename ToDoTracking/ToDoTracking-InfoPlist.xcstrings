@@ -5,9 +5,21 @@
       "comment" : "Bundle name",
       "extractionState" : "extracted_with_value",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ToDoTracking"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "new",
+            "value" : "ToDoTracking"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
             "value" : "ToDoTracking"
           }
         },

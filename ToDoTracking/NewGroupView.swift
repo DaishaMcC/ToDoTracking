@@ -20,6 +20,7 @@ struct NewGroupView: View {
                 // Group title Section 1
                 Section("Group Name"){
                     TextField("e.g Work", text: $groupName)
+                        .accessibilityIdentifier("GroupNameTextField")
                 }
                 
                 //Section 2 symbol icon
@@ -50,6 +51,7 @@ struct NewGroupView: View {
                         onSave(newGroup)
                         dismiss()
                     }
+                    .accessibilityIdentifier("SaveGroupButton")
                 }
             }
         }

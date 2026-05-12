@@ -36,6 +36,28 @@ struct TaskGroupDetailView: View {
                         .strikethrough(task.isCompleted)
                         .foregroundStyle(task.isCompleted ? .gray : .primary)
                 }
+                
+                HStack{
+                    DatePicker("Goal Date", selection : Binding<Date>(
+                        get: { task.dueDate ?? Date() },
+                        set: {task.dueDate = $0}
+                    ), displayedComponents: .date)
+                        .labelsHidden()
+                        .scaleEffect(0.9)
+                        .accessibilityIdentifier("TaskDatePicker")
+                    
+                    if let due = task.dueDate {
+                        Text("Due: \(due.formatted(date:.abbreviated, time:.omitted))")
+                            .font(.caption)
+                        foregroundColor(.secondary)
+                            .accessibilityIdentifier("TaskDateLabel")
+                    } else {
+                        Text("No Due Date Selected")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                            .accessibilityIdentifier("TaskDateLabelNotSelected")
+                    }
+                }
             }
             .onDelete{ index in
                 group.tasks.remove(atOffsets: index)

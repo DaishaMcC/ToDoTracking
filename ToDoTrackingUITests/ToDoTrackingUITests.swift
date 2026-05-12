@@ -9,33 +9,61 @@ import XCTest
 
 final class ToDoTrackingUITests: XCTestCase {
 
+    let app = XCUIApplication()
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+    
+    //start name with word "test:
+    //validateTaskCompletedTest -> incorrect
+    //testValidateTaskCompleted -> correct
+    
+    func testLaunchEnglish() {
+        app.launchArguments = ["-AppleLanguages", "(en)"]
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        //search for accessibility id of the test
+        let header = app.staticTexts[""]
+        
+        //verify that test is shown in correct language
+        XCTAssertTrue(header.exists, "The test is not found in English")
     }
-
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+    
+    func testLaunchThai() {
+        app.launchArguments = ["-AppleLanguages", "(th)"]
+        app.launch()
+        
+        //search for accessibility id of the test
+        let header = app.staticTexts[""]
+        
+        //verify that test is shown in correct language
+        XCTAssertTrue(header.exists, "The test is not found in Thai")
     }
+    
+    // create new task within a group
+    func testCreateNewTask() {
+        app.launch()
+        
+        // select a profile
+        let selectedProfile = app.buttons["ProfileCard_Professor"] //ProfileCard_Professor
+        XCTAssertTrue(selectedProfile.exists)
+        selectedProfile.tap()
+        
+        let addGroup = app.buttons["AddGroupButton"] //AddGroupButton
+        XCTAssertTrue(addGroup.exists)
+        addGroup.tap()
+        
+        let nameField = app.textFields["GroupNameTextField"] //GroupNameTextField
+        nameField.tap()
+        nameField.typeText("Test Task 123")
+        
+        app.buttons["SaveGroupButton"].tap() //SaveGroupButton
+        
+        // Add task
+        
+    }
+    
+    
+    
 }
